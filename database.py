@@ -65,10 +65,7 @@ def insert_stock(values):
     cur.execute(query,values)
     conn.commit()
 
-new_stock=(3,40)
-insert_stock(new_stock)
-stock = fetch_stock()  
-print(stock)
+
 
 # insert sales
 def insert_sales(values):
@@ -76,10 +73,6 @@ def insert_sales(values):
     cur.execute(query,values)
     conn.commit()
 
-new_sale=(2,30)
-insert_sales(new_sale)
-sales = fetch_data('sales')  
-print(sales)
 
 # insert products
 def insert_products(values):
@@ -87,10 +80,6 @@ def insert_products(values):
     cur.execute(query,values)
     conn.commit()
 
-new_product=('banana',20,40)
-insert_products(new_product)
-products=fetch_data('products')
-print(products)
 # write query to get profit per product and also sales per product on myduka_db
 # write the following queries
 # 1.profit per product
@@ -111,9 +100,7 @@ def product_profit():
     profit=cur.fetchall()
     return profit
 
-my_profit=product_profit()
-print('profit')
-print(my_profit)
+
 
 # write a function that gets sales per product
 def sales_product():
@@ -122,7 +109,5 @@ def sales_product():
     sales=cur.fetchall()
     return sales
 
-my_sales=sales_product()
-print('sales')
-print(my_sales)
+
 
