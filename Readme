@@ -1,9 +1,65 @@
-FLASK DAY 3
-=> Display the fetched data on tables
-=> using Jinja2
-=>
+What is Flask
+=>Micro web framework written in Python 
+=>Micro Means its lightweight  and doesn't include everything by default 
+=>Used to build web applications ,Apis ,dashboards
+
+    Steps to use Flask
+1.install flask
+    pip install flask 
+2.Import Flask class from flask framework
+    from flask import Flask
+3.create an app object which is the Instance of the class Flask with argument __name__
+    app=Flask(__name__)
+
+4.create routes
+    =>What is route -> path used to connect a URL with a Python Function 
+    =>always starts with a /
+
+    How to create a route 
+        @app.route('/')
+        def home():
+            return 'Hello world'
+Routes to create:
+'/'
+'/products'
+'/sales'
+'/stock'
+
+5.run the app
+    app.run()
+
+=>Each Function on a route should return an html file
+=>In Flask All HTML files must be in a folder called templates
+=>In Flask ALL css,images and javascript files must be in folder called static   
+=>render_template function in flask is used to render html files
+=>you must import render_template from flask before using it
+
+            Task
+1.Create index,products ,sales and stock html files inside the templates folder 
+2.create folder static for css and js files
+3.Render each html file to its own route
+
+NB=>always update your github repo
+    commands to update 
+    1.git add .
+    2.git commit -m "name of the change"
+    3.git push origin branch name
 
 
-1.Navbar on each html file
-2.style your application
-3.make home page appealing
+
+    Flask Day 2
+=>fetch data on main.py
+1.import the fetch data function to main
+2.call the function to fetch data on specific routes
+
+=>Display data on the ui using JINJA
+=>Templating engine used to write python like code on HTML
+
+    How to use Jinja
+1.Variables are written inside double curly braces {{variable}} in HTML  and the variable must be declared on render_template function in python
+2.A python operation is written inside single curly brace with percent bsigns  {% for i in sequence %} and the operation must be closed {% endfor %}
+
+        Task
+1.Display sales and stock on the page 
+2.make all html files bootstrap enabled 
+3.create tables on products,sales,and stock html files with random data with columns similar to the ones on the database

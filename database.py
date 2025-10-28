@@ -52,8 +52,8 @@ def fetch_data(table):
     data=cur.fetchall()
     return data
 
-stock=fetch_data('stock')
-print(stock)
+# stock=fetch_data('stock')
+# print(stock)
 # products=fetch_data('products')
 # print(products)
 # sales=fetch_data('sales')

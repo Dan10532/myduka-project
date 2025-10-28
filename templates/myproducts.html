@@ -2,39 +2,108 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
 <body>
-    <h1>my products</h1>
- 
-    <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">id</th>
-      <th scope="col">name</th>
-      <th scope="col">buying_price</th>
-      <th scope="col">selling_price</th>
-    </tr>
-  </thead>
-   <tbody>
-    {% for prod in my_prod %}
-    <tr>
-      <th scope="row">{{prod[0]}}</th>
-      <td>{{prod[1]}}</td>
-      <td>{{prod[2]}}</td>
-      <td>{{prod[3]}}</td>
-    </tr>
-     </tbody>
-  {% endfor %}
-</table>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+  
+   <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">MyDuka POS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active"  aria-current="page" href="/products">products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/stock">stock</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link "href="/sales">sales</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard">dashboard</a>
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    insert products
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/add_products" method="post">
+            <div class="mb-3">
+              <label for="name" class="form-label">product name</label>
+              <input type="text" class="form-control" id="name" name="product_name">
+             </div>
+            <div class="mb-3">
+              <label for="buyingprice" class="form-label">buying price</label>
+              <input type="number" class="form-control" id="bp" name="buying_price">
+            </div>
+             <div class="mb-3">
+              <label for="sellingprice" class="form-label">selling price</label>
+              <input type="number" class="form-control" id="sp" name="selling_price">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">name</th>
+        <th scope="col">buying_price</th>
+        <th scope="col">selling_price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prod in my_prod %}
+      <tr>
+        <th scope="row">{{prod[0]}}</th>
+        <td>{{prod[1]}}</td>
+        <td>{{prod[2]}}</td>
+        <td>{{prod[3]}}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
 
 </body>
 
