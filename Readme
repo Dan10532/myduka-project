@@ -1,65 +1,111 @@
-What is Flask
-=>Micro web framework written in Python 
-=>Micro Means its lightweight  and doesn't include everything by default 
-=>Used to build web applications ,Apis ,dashboards
+~What is Flask
+~=>Micro web framework written in Python 
+~=>Micro Means its lightweight  and doesn't include everything by default 
+~=>Used to build web applications ,Apis ,dashboards
+~
+~    Steps to use Flask
+~1.install flask
+~    pip install flask 
+~2.Import Flask class from flask framework
+~    from flask import Flask
+~3.create an app object which is the Instance of the class Flask with argument __name__
+~    app=Flask(__name__)
+~
+~4.create routes
+~    =>What is route -> path used to connect a URL with a Python Function 
+~    =>always starts with a /
+~
+~    How to create a route 
+~        @app.route('/')
+~        def home():
+~            return 'Hello world'
+~Routes to create:
+~'/'
+~'/products'
+~'/sales'
+~'/stock'
+~
+~5.run the app
+~    app.run()
+~
+~=>Each Function on a route should return an html file
+~=>In Flask All HTML files must be in a folder called templates
+~=>In Flask ALL css,images and javascript files must be in folder called static   
+~=>render_template function in flask is used to render html files
+~=>you must import render_template from flask before using it
+~
+~            Task
+~1.Create index,products ,sales and stock html files inside the templates folder 
+~2.create folder static for css and js files
+~3.Render each html file to its own route
+~
+~NB=>always update your github repo
+~    commands to update 
+~    1.git add .
+~    2.git commit -m "name of the change"
+~    3.git push origin branch name
+~
+~
+~
+~    Flask Day 2
+~=>fetch data on main.py
+~1.import the fetch data function to main
+~2.call the function to fetch data on specific routes
+~
+~=>Display data on the ui using JINJA2
+~=>Templating engine used to write python like code on HTML
+~
+~    How to use Jinja
+~1.Variables are written inside double curly braces {{variable}} in HTML  and the variable must be declared on render_template function in python
+~2.A python operation is written inside single curly brace with percent signs e.g  {% for i in sequence %} and the operation must be closed {% endfor %}
+~
+~        Task
+~1.Display sales and stock on the page 
+~2.make all html files bootstrap enabled 
+~3.create tables on products,sales,and stock html files with random data with columns similar to the ones on the database
+~
+~        Flask Day 3(display data in tables)
+~
+~=>Display the fetched data on tables
+~=>using JINJA2
+~=>We start with the products data
+~=>we loop the products data to html table 
+~
+~Display stock,sales and products in a table
+~update github
+~
+~        Task
+~1.Navbar on each html  file *
+2.Create a modal with a form to add products ,stock and  sales *
+3.style your project
+4.make homepage appealing
 
-    Steps to use Flask
-1.install flask
-    pip install flask 
-2.Import Flask class from flask framework
-    from flask import Flask
-3.create an app object which is the Instance of the class Flask with argument __name__
-    app=Flask(__name__)
 
-4.create routes
-    =>What is route -> path used to connect a URL with a Python Function 
-    =>always starts with a /
+    Flask Day 4
+=>Navigation using Navbar
+=>we write the routes on the href attribute
 
-    How to create a route 
-        @app.route('/')
-        def home():
-            return 'Hello world'
-Routes to create:
-'/'
-'/products'
-'/sales'
-'/stock'
+        Posting Data (UI=>server=>Database)
+=>You can send data from form on UI to the server-side flask route which then stores it in the database 
 
-5.run the app
-    app.run()
+        HTTP Methods 
+1.GET ->used when fetching data from a resource 
+2.POST ->used when sending data to a resource(e.g submitting a form)
 
-=>Each Function on a route should return an html file
-=>In Flask All HTML files must be in a folder called templates
-=>In Flask ALL css,images and javascript files must be in folder called static   
-=>render_template function in flask is used to render html files
-=>you must import render_template from flask before using it
+    Important Notes
+=>Every form input Must have a name attribute ->flask uses this to access the form data
+=>In main.py ,Create route that:
+    1.checks HTTP method (GET or POST)
+    2.Receives form data from the UI
+    3.call the insert function to add data to the database
 
-            Task
-1.Create index,products ,sales and stock html files inside the templates folder 
-2.create folder static for css and js files
-3.Render each html file to its own route
+    Request,Redirect,url_for  in Flask
+    1.Request
+=>used to receive data from the form(ui->server)
 
-NB=>always update your github repo
-    commands to update 
-    1.git add .
-    2.git commit -m "name of the change"
-    3.git push origin branch name
+    2.Redirect
+=>Redirect redirects the user to another url after perfoming an action
+    3.url_for
+=>Url_for takes the function name then redirects to the route 
 
-
-
-    Flask Day 2
-=>fetch data on main.py
-1.import the fetch data function to main
-2.call the function to fetch data on specific routes
-
-=>Display data on the ui using JINJA
-=>Templating engine used to write python like code on HTML
-
-    How to use Jinja
-1.Variables are written inside double curly braces {{variable}} in HTML  and the variable must be declared on render_template function in python
-2.A python operation is written inside single curly brace with percent bsigns  {% for i in sequence %} and the operation must be closed {% endfor %}
-
-        Task
-1.Display sales and stock on the page 
-2.make all html files bootstrap enabled 
-3.create tables on products,sales,and stock html files with random data with columns similar to the ones on the database
+NB=>ON the form element we must have Action attribute with route as the value and method attribute with post as the value 

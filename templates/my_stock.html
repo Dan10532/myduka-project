@@ -55,26 +55,27 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form>
+          <form action="/add_stock" method="post">
             <div class="mb-3">
-              <label for="stock" class="form-label">product id</label>
-              <input type="number" class="form-control" id="stock" aria-describedby="emailHelp">
+              <label for="pid" class="form-label">product id</label>
+            <select name="product_id" id="pid">
+                {% for product in products %}
+                <option value="{{product[0]}}">{{product[1]}}</option>
+                 {% endfor %}
+              </select>
+             
 
             </div>
             <div class="mb-3">
-              <label for="" class="form-label">stock quantity</label>
-              <input type="number" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+              <label for="stock_quantity" class="form-label">stock quantity</label>
+              <input type="number" class="form-control" id="stock_quantity" name="stock_quantity">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Understood</button>
+         
         </div>
       </div>
     </div>
