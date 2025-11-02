@@ -2,120 +2,126 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-     <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyDuka POS - Sales</title>
+
+  <!-- Bootstrap + DataTables -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">MyDuka POS</a>
+      <a class="navbar-brand fw-bold text-white" href="/">MyDuka POS</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/products">products</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/stock">stock</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/sales">sales</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/dashboard">dashboard</a>
-        </li>
-      </ul>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="/products">Products</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="/stock">Stock</a></li>
+          <li class="nav-item"><a class="nav-link active text-info fw-semibold" href="/sales">Sales</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Dashboard</a></li>
+        </ul>
+      </div>
     </div>
-
   </nav>
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    insert sales
-  </button>
 
-  <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">insert sales</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- Header -->
+  <div class="container text-center my-5 pt-5">
+    <h2 class="fw-bold mt-4">Sales Management</h2>
+    <p class="text-muted">Record and track your daily product sales</p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertSalesModal">
+      + Insert Sale
+    </button>
+  </div>
+
+  <!-- Insert Sales Modal -->
+  <div class="modal fade" id="insertSalesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="insertSalesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="insertSalesLabel">Insert Sale</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
         <div class="modal-body">
           <form action="/add_sales" method="post">
             <div class="mb-3">
-              <label for="productid" class="form-label">select product</label>
-              <select name="product_id" id="pid">
+              <label for="pid" class="form-label fw-semibold">Select Product</label>
+              <select name="product_id" id="pid" class="form-select">
                 {% for product in products %}
-                <option value="{{product[0]}}">{{product[1]}}</option>
-                 {% endfor %}
+                <option value="{{ product[0] }}">{{ product[1] }}</option>
+                {% endfor %}
               </select>
-             
             </div>
+
             <div class="mb-3">
-              <label for="quantity" class="form-label">quantity</label>
-              <input type="number" class="form-control" id="quantity" name="quantity">
+              <label for="quantity" class="form-label fw-semibold">Quantity</label>
+              <input type="number" class="form-control" id="quantity" name="quantity" required>
             </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Understood</button>
         </div>
       </div>
     </div>
   </div>
 
-  <table class="display" id="myTable">
-    <thead>
-      <tr>
-        <th scope="col">id</th>
-        <th scope="col">product id</th>
-        <th scope="col">quantity</th>
-        <th scope="col">created_at</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for sale in my_sale %}
-      <tr>
-        <th scope="row">{{sale[0]}}</th>
-        <td>{{sale[1]}}</td>
-        <td>{{sale[2]}}</td>
-        <td>{{sale[3]}}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
+  <!-- Sales Table -->
+  <div class="container my-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <table class="display" id="myTable" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product ID</th>
+              <th>Quantity</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sale in my_sale %}
+            <tr>
+              <td>{{ sale[0] }}</td>
+              <td>{{ sale[1] }}</td>
+              <td>{{ sale[2] }}</td>
+              <td>{{ sale[3] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
+  <!-- Footer -->
+  <footer class="text-center py-3 bg-dark text-white">
+    <small>© 2025 MyDuka POS — Smart Business Management</small>
+  </footer>
 
-  </table>
-      <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-       <script>
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+  <script>
+    // Keep JS initialization inline
     let table = new DataTable('#myTable');
   </script>
+
 </body>
 
 </html>

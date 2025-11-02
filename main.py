@@ -1,5 +1,5 @@
 from flask import Flask,render_template,request,redirect,url_for
-from database import fetch_data,insert_products,insert_sales,insert_stock
+from database import fetch_data,insert_products,insert_sales,insert_stock,product_profit
 
 app=Flask(__name__)
 
@@ -29,6 +29,20 @@ def stock():
     products=fetch_data('products')
 
     return render_template('my_stock.html',my_stock=stock,products=products)
+# dashboard route
+@app.route('/dashboard')
+def dashboard():
+    profit=product_profit()
+    # product profit
+    product_names=[]
+    product_profits=[]
+    for i in profit:
+        product_names.append(i[0])
+        product_profits.append(float(i[2]))
+
+
+    return render_template('dashboard.html',product_names=product_names,product_profits=product_profits)
+
 
 # create a python function that receives data from the ui to the serverside
 @app.route('/add_products',methods=['GET','POST'])
