@@ -103,11 +103,22 @@ def product_profit():
 
 
 # write a function that gets sales per product
-def sales_product():
+def sales_products():
     query='SELECT p.id,p.name,SUM(s.quantity * p.selling_price) AS total_sale FROM sales AS s JOIN products AS p ON s.pid = p.id GROUP BY p.id, p.name;'
     cur.execute(query)
     sales=cur.fetchall()
     return sales
 
-
+# function that gets profit per day
+def profit_day():
+    query='select date(s.created_at) as sale_date, SUM(s.quantity * (p.selling_price - p.buying_price)) AS daily_profit FROM sales AS s JOIN products AS p ON s.pid = p.id GROUP BY DATE(s.created_at) ORDER BY sale_date ASC;'
+    cur.execute(query)
+    profit_d=cur.fetchall()
+    return profit_d
+# function that gets sales per day
+def sales_day():
+    query='select date(s.created_at) as sale_date,sum(s.quantity * p.selling_price) as total_sales from sales as s join products as p on s.pid = p.id group by date(s.created_at) order by sale_date asc;'
+    cur.execute(query)
+    sales_d=cur.fetchall()
+    return sales_d
 
