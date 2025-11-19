@@ -1,179 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block title %}Login | MyDuka POS{% endblock %}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyDuka POS - Login</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/>
-
-  <!-- ✅ Internal CSS FIX -->
-  <style>
-    /* Global reset */
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* Navbar spacing */
-    .page-wrap {
-      flex: 1;
-      padding-top: 110px; /* ✅ pushes card below fixed navbar */
-      padding-bottom: 40px;
-    }
-
-    /* Centering area */
-    .center-area {
-      min-height: 60vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Login card */
-    .auth-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 5px 16px rgba(0,0,0,0.12);
-      width: 100%;
-      max-width: 450px;
-    }
-
-    /* Inputs */
-    .form-control {
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-
-    .form-control:focus {
-      border-color: #86b7fe;
-      box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
-    }
-
-    /* Button */
-    .btn-primary {
-      border-radius: 10px;
-      padding: 10px;
-      background-color: #0d6efd;
-    }
-
-    .btn-primary:hover {
-      background-color: #0b5ed7;
-    }
-
-    /* Footer */
-    .site-footer {
-      background: #000;
-      color: #ccc;
-      padding: 15px 0;
-      text-align: center;
-      margin-top: auto;
-      border-top: 2px solid #0d6efd;
-    }
-
-    /* Navbar colors fix */
-    .navbar .nav-link,
-    .navbar-brand {
-      color: white !important;
-    }
-
-    .navbar .nav-link.active {
-      color: #0dcaf0 !important;
-    }
-  </style>
-
-</head>
-
-<body>
-
-  <!-- ✅ Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-white" href="/">MyDuka POS</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div id="nav" class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/products">Products</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/stock">Stock</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/sales">Sales</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active fw-semibold" href="/login">Login</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/register">Register</a></li>
-        </ul>
+{% block content %}
+<main>
+  <div class="form-card">
+    <h3 class="text-center fw-bold mb-4">Login</h3>
+    <form action="/login" method="post">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
       </div>
-    </div>
-  </nav>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class='flashes list-unstyled'>
-    {% for category, message in messages %}
-      <li class="alert alert-{{ category }} alert-dismissible fade show"> {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-  <!-- ✅ Page content wrapper -->
-  <main class="page-wrap">
-    <div class="container h-100">
-      <div class="row justify-content-center align-items-center center-area">
-        <div class="col-12 col-md-8 col-lg-5">
-
-          <!-- ✅ Login Card -->
-          <div class="card auth-card shadow-lg">
-            <div class="card-body p-4 p-md-5">
-              <h3 class="text-center mb-2 fw-semibold">Welcome back</h3>
-              <p class="text-center text-muted mb-4">Log in to continue to MyDuka POS</p>
-
-              <form action="/login" method="POST" novalidate>
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="email" name="email"
-                         placeholder="name@example.com" required>
-                </div>
-
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password" name="password"
-                         placeholder="••••••••" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
-
-                <p class="text-center small mt-3 mb-0">
-                  Don’t have an account?
-                  <a href="/register" class="link-primary">Register</a>
-                </p>
-              </form>
-
-            </div>
-          </div>
-
-        </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
       </div>
-    </div>
-  </main>
-
-  <!-- ✅ Footer -->
-  <footer class="site-footer">
-    <div class="container text-center">
-      <p class="mb-0 small">© 2025 MyDuka POS — All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <p class="text-center mt-3">Don't have an account? <a href="/register">Register</a></p>
+  </div>
+</main>
+{% endblock %}

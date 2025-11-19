@@ -74,11 +74,7 @@ def remove_product(product_id):
     flash('Product deleted successfully!', 'danger')
     return redirect(url_for('products'))
 
-# -------------------------------
 # SALES
-# -------------------------------
-
-
 @app.route('/sales')
 @login_required
 def sales():
@@ -110,11 +106,8 @@ def remove_sale(sale_id):
     db_delete_sale(sale_id)
     flash('Sale deleted successfully!', 'danger')
     return redirect(url_for('sales'))
-
-# -------------------------------
+                    
 # STOCK
-# -------------------------------
-
 
 @app.route('/stock')
 @login_required

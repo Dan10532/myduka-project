@@ -1,217 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}Sales | MyDuka POS{% endblock %}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyDuka POS - Sales</title>
+{% block content %}
+<div class="container text-center my-5">
+    <h2 class="fw-bold mt-4">Sales</h2>
+    <p class="text-muted">Track all your product sales</p>
+</div>
 
-  <!-- Bootstrap + DataTables -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
-
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-
-<body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-white" href="/">MyDuka POS</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/products">Products</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/stock">Stock</a></li>
-          <li class="nav-item"><a class="nav-link active text-info fw-semibold" href="/sales">Sales</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Dashboard</a></li>
-         
-
-        
-  {% if session.get('email') %}
-  <li class="nav-item"><a class="nav-link text-danger fw-semibold" href="{{ url_for('logout') }}">Logout</a></li>
-  {% else %}
-  <li class="nav-item"><a class="nav-link active fw-semibold" href="/login">Login</a></li>
-  <li class="nav-item"><a class="nav-link text-white" href="/register">Register</a></li>
-  {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Flash Messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class='flashes list-unstyled m-3'>
-      {% for category, message in messages %}
-        <li class="alert alert-{{ category }} alert-dismissible fade show">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  {% endwith %}
-
-  <!-- Page Header -->
-  <div class="container text-center my-5 pt-5">
-    <h2 class="fw-bold mt-4">Sales Management</h2>
-    <p class="text-muted">Record and track your daily product sales</p>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertSalesModal">
-      + Insert Sale
-    </button>
-  </div>
-
-  <!-- Insert Sales Modal -->
-  <div class="modal fade" id="insertSalesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="insertSalesLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="insertSalesLabel">Insert Sale</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Sales Table -->
+<div class="container my-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="display table table-striped align-middle" id="myTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Quantity Sold</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in my_sales %}
+                    <tr>
+                        <td>{{ sale[0] }}</td>
+                        <td>{{ sale[1] }}</td>
+                        <td>{{ sale[2] }}</td>
+                        <td>{{ sale[3] }}</td>
+                        <td>{{ sale[4] }}</td>
+                        <td>
+                            <form action="/delete_sale/{{ sale[0] }}" method="post" style="display:inline-block;" onsubmit="return confirm('Delete this sale?');">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
-        <div class="modal-body">
-          <form action="/add_sales" method="post">
-            <div class="mb-3">
-              <label for="pid" class="form-label fw-semibold">Select Product</label>
-              <select name="product_id" id="pid" class="form-select" required>
-                {% for product in products %}
-                <option value="{{ product[0] }}">{{ product[1] }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label for="quantity" class="form-label fw-semibold">Quantity</label>
-              <input type="number" class="form-control" id="quantity" name="quantity" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">Submit</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Edit Sale Modal -->
-  <div class="modal fade" id="editSaleModal" tabindex="-1" aria-labelledby="editSaleLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-warning text-dark">
-          <h5 class="modal-title fw-bold" id="editSaleLabel">Edit Sale</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editSaleForm" method="post">
-            <input type="hidden" id="edit_sale_id" name="sale_id">
-            <div class="mb-3">
-              <label for="edit_product_id" class="form-label fw-semibold">Product</label>
-              <select name="product_id" id="edit_product_id" class="form-select" required>
-                {% for product in products %}
-                <option value="{{ product[0] }}">{{ product[1] }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="edit_quantity" class="form-label fw-semibold">Quantity</label>
-              <input type="number" class="form-control" id="edit_quantity" name="quantity" required>
-            </div>
-            <button type="submit" class="btn btn-warning w-100 fw-bold">Update Sale</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sales Table -->
-  <div class="container my-5">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <table class="display table table-striped align-middle" id="myTable" style="width:100%">
-          <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Created At</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for sale in my_sale %}
-            <tr>
-              <td>{{ sale[0] }}</td>
-              <td>
-                {% for product in products %}
-                  {% if product[0] == sale[1] %}
-                    {{ product[1] }}
-                  {% endif %}
-                {% endfor %}
-              </td>
-              <td>{{ sale[2] }}</td>
-              <td>{{ sale[3] }}</td>
-              <td>
-                <!-- Edit Button -->
-                <button class="btn btn-sm btn-warning editBtn"
-                        data-id="{{ sale[0] }}" data-product="{{ sale[1] }}" data-qty="{{ sale[2] }}"
-                        data-bs-toggle="modal" data-bs-target="#editSaleModal">
-                  <i class="bi bi-pencil-square"></i> Edit
-                </button>
-
-                <!-- Delete Form -->
-                <form action="/delete_sale/{{ sale[0] }}" method="post" style="display:inline-block;"
-                      onsubmit="return confirm('Are you sure you want to delete this sale?');">
-                  <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="text-center py-3 bg-dark text-white">
-    <small>© 2025 MyDuka POS — Smart Business Management</small>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-
-  <script>
-    // Populate Edit Sale Modal
-    $(document).on("click", ".editBtn", function () {
-      const id = $(this).data("id");
-      const product = $(this).data("product");
-      const qty = $(this).data("qty");
-
-      $("#edit_sale_id").val(id);
-      $("#edit_product_id").val(product);
-      $("#edit_quantity").val(qty);
-
-      $("#editSaleForm").attr("action", "/update_sale/" + id);
-    });
-
-    // Initialize DataTable
-    let table = new DataTable('#myTable');
-  </script>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

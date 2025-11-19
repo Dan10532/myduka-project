@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyDuka POS{% endblock %}</title>
+
+    <!-- Bootstrap + DataTables + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 shadow-sm fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-white" href="/">MyDuka POS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/stock">Stock</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/sales">Sales</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Dashboard</a></li>
+
+                {% if session.get('email') %}
+                <li class="nav-item"><a class="nav-link text-danger fw-semibold" href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link text-white" href="/login">Login</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/register">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class="flashes list-unstyled m-3 pt-5">
+        {% for category, message in messages %}
+            <li class="alert alert-{{ category }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<main class="page-wrap">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="text-center py-3 bg-dark text-white mt-auto">
+    <small>© 2025 MyDuka POS — Smart Business Management</small>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

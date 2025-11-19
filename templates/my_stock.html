@@ -1,209 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}Stock | MyDuka POS{% endblock %}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyDuka POS - Stock</title>
-
-  <!-- Bootstrap + DataTables -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="//cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
-
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-
-<body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-white" href="/">MyDuka POS</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/products">Products</a></li>
-          <li class="nav-item"><a class="nav-link active text-info fw-semibold" href="/stock">Stock</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/sales">Sales</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Dashboard</a></li>
-          
-  {% if session.get('email') %}
-  <li class="nav-item"><a class="nav-link text-danger fw-semibold" href="{{ url_for('logout') }}">Logout</a></li>
-  {% else %}
-  <li class="nav-item"><a class="nav-link active fw-semibold" href="/login">Login</a></li>
-  <li class="nav-item"><a class="nav-link text-white" href="/register">Register</a></li>
-  {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Flash Messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <ul class='flashes list-unstyled m-3'>
-        {% for category, message in messages %}
-          <li class="alert alert-{{ category }} alert-dismissible fade show">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-
-  <!-- Page Header -->
-  <div class="container text-center my-5 pt-5">
+{% block content %}
+<div class="container text-center my-5">
     <h2 class="fw-bold mt-4">Stock Management</h2>
     <p class="text-muted">Easily manage and track your product stock levels</p>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertStockModal">
-      + Insert Stock
+        + Insert Stock
     </button>
-  </div>
+</div>
 
-  <!-- Insert Stock Modal -->
-  <div class="modal fade" id="insertStockModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="insertStockLabel" aria-hidden="true">
+<!-- Insert Stock Modal -->
+<div class="modal fade" id="insertStockModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="insertStockLabel">Insert Stock</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form action="/add_stock" method="post">
-            <div class="mb-3">
-              <label for="pid" class="form-label fw-semibold">Product</label>
-              <select name="product_id" id="pid" class="form-select">
-                {% for product in products %}
-                  <option value="{{ product[0] }}">{{ product[1] }}</option>
-                {% endfor %}
-              </select>
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Insert Stock</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="mb-3">
-              <label for="stock_quantity" class="form-label fw-semibold">Stock Quantity</label>
-              <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Edit Stock Modal -->
-  <div class="modal fade" id="editStockModal" tabindex="-1" aria-labelledby="editStockLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-header bg-warning text-dark">
-          <h5 class="modal-title fw-bold" id="editStockLabel">Edit Stock</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editStockForm" method="post">
-            <input type="hidden" id="edit_stock_id" name="stock_id">
-            <div class="mb-3">
-              <label for="edit_pid" class="form-label fw-semibold">Product</label>
-              <select name="product_id" id="edit_pid" class="form-select">
-                {% for product in products %}
-                  <option value="{{ product[0] }}">{{ product[1] }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="edit_stock_quantity" class="form-label fw-semibold">Stock Quantity</label>
-              <input type="number" class="form-control" id="edit_stock_quantity" name="stock_quantity" required>
-            </div>
-            <button type="submit" class="btn btn-warning w-100 fw-bold">Update Stock</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Stock Table -->
-  <div class="container my-5">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <table class="display table table-striped align-middle" id="myTable" style="width:100%">
-          <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Product</th>
-              <th>Quantity</th>
-              <th>Created At</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for stock in my_stock %}
-            <tr>
-              <td>{{ stock[0] }}</td>
-              <td>{{ stock[1] }}</td>
-              <td>{{ stock[2] }}</td>
-              <td>{{ stock[3] }}</td>
-              <td>
-                <!-- Edit Button -->
-                <button class="btn btn-sm btn-warning editStockBtn"
-                  data-id="{{ stock[0] }}"
-                  data-pid="{{ stock[1] }}"
-                  data-qty="{{ stock[2] }}"
-                  data-bs-toggle="modal" data-bs-target="#editStockModal">
-                  <i class="bi bi-pencil-square"></i> Edit
-                </button>
-
-                <!-- Delete Form -->
-                <form action="/delete_stock/{{ stock[0] }}" method="post" style="display:inline-block;"
-                  onsubmit="return confirm('Are you sure you want to delete this stock?');">
-                  <button type="submit" class="btn btn-sm btn-danger">
-                    <i class="bi bi-trash"></i> Delete
-                  </button>
+            <div class="modal-body">
+                <form action="/add_stock" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Product</label>
+                        <select name="product_id" class="form-select">
+                            {% for product in products %}
+                                <option value="{{ product[0] }}">{{ product[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Stock Quantity</label>
+                        <input type="number" class="form-control" name="stock_quantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
                 </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
 
-  <!-- Footer -->
-  <footer class="text-center py-3 bg-dark text-white">
-    <small>© 2025 MyDuka POS — Smart Business Management</small>
-  </footer>
+<!-- Edit Stock Modal -->
+<div class="modal fade" id="editStockModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold">Edit Stock</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editStockForm" method="post">
+                    <input type="hidden" id="edit_stock_id" name="stock_id">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Product</label>
+                        <select name="product_id" id="edit_pid" class="form-select">
+                            {% for product in products %}
+                                <option value="{{ product[0] }}">{{ product[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Stock Quantity</label>
+                        <input type="number" class="form-control" id="edit_stock_quantity" name="stock_quantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">Update Stock</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="//cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+<!-- Stock Table -->
+<div class="container my-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="display table table-striped align-middle" id="myTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in my_stock %}
+                    <tr>
+                        <td>{{ stock[0] }}</td>
+                        <td>{{ stock[1] }}</td>
+                        <td>{{ stock[2] }}</td>
+                        <td>{{ stock[3] }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning editStockBtn"
+                                data-id="{{ stock[0] }}"
+                                data-pid="{{ stock[1] }}"
+                                data-qty="{{ stock[2] }}"
+                                data-bs-toggle="modal" data-bs-target="#editStockModal">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+                            <form action="/delete_stock/{{ stock[0] }}" method="post" style="display:inline-block;" onsubmit="return confirm('Delete this stock?');">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-  <script>
-    // Initialize DataTable
-    let table = new DataTable('#myTable');
+{% endblock %}
 
-    // Populate Edit Stock Modal
-    $(document).on("click", ".editStockBtn", function () {
-      const id = $(this).data("id");
-      const pid = $(this).data("pid");
-      const qty = $(this).data("qty");
+{% block scripts %}
+<script>
+$(document).on("click", ".editStockBtn", function () {
+    const id = $(this).data("id");
+    const pid = $(this).data("pid");
+    const qty = $(this).data("qty");
 
-      $("#edit_stock_id").val(id);
-      $("#edit_pid").val(pid);
-      $("#edit_stock_quantity").val(qty);
+    $("#edit_stock_id").val(id);
+    $("#edit_pid").val(pid);
+    $("#edit_stock_quantity").val(qty);
 
-      // dynamically set action
-      $("#editStockForm").attr("action", "/update_stock/" + id);
-    });
-  </script>
-
-</body>
-</html>
+    $("#editStockForm").attr("action", "/update_stock/" + id);
+});
+</script>
+{% endblock %}
